@@ -1,5 +1,4 @@
 import java.io.*;
-import java.security.cert.Extension;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
@@ -113,7 +112,6 @@ public class CashTrackerApp extends Application {
                 text += transactionMode.getValue() + " - " + description.getText() + "\n";
 
                 FileChooser transactionFile = new FileChooser();
-                transactionFile.setInitialDirectory(new File("C:\\Users\\chirag\\Documents\\Misc\\Cash files"));
                 transactionFile.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text Files", "*.txt"));
                 try(BufferedWriter bw = new BufferedWriter(new FileWriter(transactionFile.showSaveDialog(stage), true))) {
                     bw.write(text);
@@ -166,12 +164,11 @@ public class CashTrackerApp extends Application {
 
                     @Override
                     public void handle(MouseEvent mouseEvent) {
-                        String filepath = "C:\\Users\\chirag\\Documents\\Misc\\Cash files\\Report-" + toString(reportDate.getValue()) + ".txt"; // Change filepath according to requirements
-                        FileChooser transactionFile = new FileChooser();
-                        transactionFile.setInitialDirectory(new File("C:\\Users\\chirag\\Documents\\Misc\\Cash files"));
+                        FileChooser transactionFile = new FileChooser(), reportFile = new FileChooser();
                         transactionFile.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text Files", "*.txt"));
+                        reportFile.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text Files", "*.txt"));
                         try(BufferedReader br = new BufferedReader(new FileReader(transactionFile.showOpenDialog(reportStage)));
-                            BufferedWriter bw = new BufferedWriter(new FileWriter(filepath))) {
+                            BufferedWriter bw = new BufferedWriter(new FileWriter(reportFile.showSaveDialog(reportStage)))) {
                             String line;
                             double total = 0.0, totalCash = 0.0, totalCheque = 0.0, totalCard = 0.0;
                             while((line = br.readLine()) != null) {
@@ -242,12 +239,11 @@ public class CashTrackerApp extends Application {
                 EventHandler<MouseEvent> generateMonthly = new EventHandler<MouseEvent>() {
                     @Override
                     public void handle(MouseEvent mouseEvent) {
-                        String filepath = "C:\\Users\\chirag\\Documents\\Misc\\Cash files\\Report-" + reportMonth.getValue() + reportYear.getValue() + ".txt"; // Change filepath according to requirements
-                        FileChooser transactionFile = new FileChooser();
-                        transactionFile.setInitialDirectory(new File("C:\\Users\\chirag\\Documents\\Misc\\Cash files"));
+                        FileChooser transactionFile = new FileChooser(), reportFile = new FileChooser();
                         transactionFile.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text Files", "*.txt"));
+                        reportFile.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text Files", "*.txt"));
                         try(BufferedReader br = new BufferedReader(new FileReader(transactionFile.showOpenDialog(reportStage)));
-                            BufferedWriter bw = new BufferedWriter(new FileWriter(filepath))) {
+                            BufferedWriter bw = new BufferedWriter(new FileWriter(reportFile.showSaveDialog(reportStage)))) {
                             String line;
                             double total = 0.0, totalCash = 0.0, totalCheque = 0.0, totalCard = 0.0;
                             while((line = br.readLine()) != null) {
@@ -315,12 +311,11 @@ public class CashTrackerApp extends Application {
                 EventHandler<MouseEvent> generateYearly = new EventHandler<MouseEvent>() {
                     @Override
                     public void handle(MouseEvent mouseEvent) {
-                        String filepath = "C:\\Users\\chirag\\Documents\\Misc\\Cash files\\Report-" + reportYear.getValue() + ".txt"; // Change filepath according to requirements
-                        FileChooser transactionFile = new FileChooser();
-                        transactionFile.setInitialDirectory(new File("C:\\Users\\chirag\\Documents\\Misc\\Cash files"));
+                        FileChooser transactionFile = new FileChooser(), reportFile = new FileChooser();
                         transactionFile.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text Files", "*.txt"));
+                        reportFile.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text Files", "*.txt"));
                         try(BufferedReader br = new BufferedReader(new FileReader(transactionFile.showOpenDialog(reportStage)));
-                            BufferedWriter bw = new BufferedWriter(new FileWriter(filepath))) {
+                            BufferedWriter bw = new BufferedWriter(new FileWriter(reportFile.showSaveDialog(reportStage)))) {
                             String line;
                             double total = 0.0, totalCash = 0.0, totalCheque = 0.0, totalCard = 0.0;
                             while((line = br.readLine()) != null) {
