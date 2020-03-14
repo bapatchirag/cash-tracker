@@ -44,6 +44,8 @@ public class CashTrackerApp extends Application {
         TextField amount = new TextField();
         ChoiceBox<String> transactionMode = new ChoiceBox<String>();
         TextField description = new TextField();
+        TextField selectFile = new TextField();
+        Button browseFiles = new Button("Browse");
         Button submitButton = new Button("Submit");
         Button clearButton = new Button("Clear");
         Button genDailyReport = new Button("Daily Report");
@@ -59,10 +61,11 @@ public class CashTrackerApp extends Application {
         HBox amountHBox = getHBox(new Text("AMOUNT:"), amount);
         HBox modeHBox = getHBox(new Text("MODE:"), transactionMode);
         HBox descriptionHBox = getHBox(new Text("DESCRIPTION:"), description);
+        HBox selectFileHBox = getHBox(new Text("SELECT FILE:"), selectFile, browseFiles);
         HBox formActionHBox = getHBox(submitButton, clearButton);
         HBox reportActionHBox = getHBox(genDailyReport, genMonthlyReport, genYearlyReport);
 
-        VBox formVBox = getVBox(new Text("NEW ENTRY"), dateHBox, typeHBox, amountHBox, modeHBox, descriptionHBox, formActionHBox);
+        VBox formVBox = getVBox(new Text("NEW ENTRY"), dateHBox, typeHBox, amountHBox, modeHBox, descriptionHBox, selectFileHBox, formActionHBox);
         VBox reportVBox = getVBox(new Text("GENERATE REPORTS"), reportActionHBox);
         VBox totalVBox = getVBox(formVBox, reportVBox);
 
@@ -73,6 +76,10 @@ public class CashTrackerApp extends Application {
         /* Properties of components and layouts */
         amount.setPromptText("Enter amount");
         description.setPromptText("Enter description");
+        selectFile.setPromptText("Browse");
+        selectFile.setEditable(false);
+        selectFile.setMouseTransparent(true);
+        selectFile.setFocusTraversable(false);
         credit.setSelected(true);
         transactionMode.getItems().addAll("Cash", "Cheque", "Card");
         transactionMode.setValue("Cash");
@@ -80,6 +87,16 @@ public class CashTrackerApp extends Application {
 
 
         /* Event handlers */
+        EventHandler<MouseEvent> fileSelect = new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                FileChooser select = new FileChooser();
+                select.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text files", "*.txt"));
+                selectFile.setText(select.showSaveDialog(stage).getAbsolutePath());
+            }
+        };
+        browseFiles.addEventHandler(MouseEvent.MOUSE_CLICKED, fileSelect);
+
         EventHandler<MouseEvent> submit = new EventHandler<MouseEvent>() {
             public String toString(LocalDate date) {
                 if(date != null)
@@ -111,9 +128,7 @@ public class CashTrackerApp extends Application {
                     text += amount.getText() + " - ";
                 text += transactionMode.getValue() + " - " + description.getText() + "\n";
 
-                FileChooser transactionFile = new FileChooser();
-                transactionFile.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text Files", "*.txt"));
-                try(BufferedWriter bw = new BufferedWriter(new FileWriter(transactionFile.showSaveDialog(stage), true))) {
+                try(BufferedWriter bw = new BufferedWriter(new FileWriter(new File(selectFile.getText()), true))) {
                     bw.write(text);
                 }
                 catch(IOException ioe) {
@@ -147,27 +162,35 @@ public class CashTrackerApp extends Application {
 
                 DatePicker reportDate = new DatePicker();
                 reportDate.setPromptText("Enter required date for report");
+                TextField tranFilePath = new TextField();
+                tranFilePath.setEditable(false);
+                tranFilePath.setFocusTraversable(false);
+                tranFilePath.setMouseTransparent(true);
+                Button tranFileBrowse = new Button("Browse");
                 Button reportGen = new Button("Generate!");
 
                 HBox reportDateHBox = getHBox(new Text("Date:"), reportDate);
-                VBox dailyReportVBox = getVBox(reportDateHBox, reportGen);
+                HBox tranFileHBox = getHBox(new Text("Transaction file:"), tranFilePath, tranFileBrowse);
+                VBox dailyReportVBox = getVBox(reportDateHBox, tranFileHBox, reportGen);
                 BorderPane fullWindow = new BorderPane();
                 fullWindow.setCenter(dailyReportVBox);
 
-                EventHandler<MouseEvent> generateDaily = new EventHandler<MouseEvent>() {
-                    public String toString(LocalDate date) {
-                        if(date != null)
-                            return DateTimeFormatter.ofPattern("ddMMyyyy").format(date);
-                        else
-                            return "";
-                    }
-
+                EventHandler<MouseEvent> fileSelect = new EventHandler<MouseEvent>() {
                     @Override
                     public void handle(MouseEvent mouseEvent) {
-                        FileChooser transactionFile = new FileChooser(), reportFile = new FileChooser();
-                        transactionFile.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text Files", "*.txt"));
+                        FileChooser select = new FileChooser();
+                        select.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text files", "*.txt"));
+                        tranFilePath.setText(select.showSaveDialog(reportStage).getAbsolutePath());
+                    }
+                };
+                tranFileBrowse.addEventHandler(MouseEvent.MOUSE_CLICKED, fileSelect);
+
+                EventHandler<MouseEvent> generateDaily = new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent mouseEvent) {
+                        FileChooser reportFile = new FileChooser();
                         reportFile.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text Files", "*.txt"));
-                        try(BufferedReader br = new BufferedReader(new FileReader(transactionFile.showOpenDialog(reportStage)));
+                        try(BufferedReader br = new BufferedReader(new FileReader(new File(tranFilePath.getText())));
                             BufferedWriter bw = new BufferedWriter(new FileWriter(reportFile.showSaveDialog(reportStage)))) {
                             String line;
                             double total = 0.0, totalCash = 0.0, totalCheque = 0.0, totalCard = 0.0;
@@ -228,21 +251,36 @@ public class CashTrackerApp extends Application {
                 int curYear = LocalDate.now().getYear();
                 reportYear.getItems().addAll(Integer.toString(curYear), Integer.toString(curYear - 1), Integer.toString(curYear - 2), Integer.toString(curYear - 3), Integer.toString(curYear - 4), Integer.toString(curYear - 5));
                 reportYear.setValue(Integer.toString(curYear));
+                TextField tranFilePath = new TextField();
+                tranFilePath.setEditable(false);
+                tranFilePath.setFocusTraversable(false);
+                tranFilePath.setMouseTransparent(true);
+                Button tranFileBrowse = new Button("Browse");
                 Button reportGen = new Button("Generate!");
 
                 HBox reportMonthHBox = getHBox(new Text("Month:"), reportMonth);
                 HBox reportYearHBox = getHBox(new Text("Year"), reportYear);
-                VBox monthlyReportVBox = getVBox(reportMonthHBox, reportYearHBox, reportGen);
+                HBox tranFileHBox = getHBox(new Text("Transaction file:"), tranFilePath, tranFileBrowse);
+                VBox monthlyReportVBox = getVBox(reportMonthHBox, reportYearHBox, tranFileHBox, reportGen);
                 BorderPane fullWindow = new BorderPane();
                 fullWindow.setCenter(monthlyReportVBox);
+
+                EventHandler<MouseEvent> fileSelect = new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent mouseEvent) {
+                        FileChooser select = new FileChooser();
+                        select.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text files", "*.txt"));
+                        tranFilePath.setText(select.showSaveDialog(reportStage).getAbsolutePath());
+                    }
+                };
+                tranFileBrowse.addEventHandler(MouseEvent.MOUSE_CLICKED, fileSelect);
 
                 EventHandler<MouseEvent> generateMonthly = new EventHandler<MouseEvent>() {
                     @Override
                     public void handle(MouseEvent mouseEvent) {
-                        FileChooser transactionFile = new FileChooser(), reportFile = new FileChooser();
-                        transactionFile.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text Files", "*.txt"));
+                        FileChooser reportFile = new FileChooser();
                         reportFile.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text Files", "*.txt"));
-                        try(BufferedReader br = new BufferedReader(new FileReader(transactionFile.showOpenDialog(reportStage)));
+                        try(BufferedReader br = new BufferedReader(new FileReader(new File(tranFilePath.getText())));
                             BufferedWriter bw = new BufferedWriter(new FileWriter(reportFile.showSaveDialog(reportStage)))) {
                             String line;
                             double total = 0.0, totalCash = 0.0, totalCheque = 0.0, totalCard = 0.0;
@@ -301,20 +339,35 @@ public class CashTrackerApp extends Application {
                 int curYear = LocalDate.now().getYear();
                 reportYear.getItems().addAll(Integer.toString(curYear), Integer.toString(curYear - 1), Integer.toString(curYear - 2), Integer.toString(curYear - 3), Integer.toString(curYear - 4), Integer.toString(curYear - 5));
                 reportYear.setValue(Integer.toString(curYear));
+                TextField tranFilePath = new TextField();
+                tranFilePath.setEditable(false);
+                tranFilePath.setFocusTraversable(false);
+                tranFilePath.setMouseTransparent(true);
+                Button tranFileBrowse = new Button("Browse");
                 Button reportGen = new Button("Generate!");
 
                 HBox reportYearHBox = getHBox(new Text("Year"), reportYear);
-                VBox yearlyReportVBox = getVBox(reportYearHBox, reportGen);
+                HBox tranFileHBox = getHBox(new Text("Transaction file:"), tranFilePath, tranFileBrowse);
+                VBox yearlyReportVBox = getVBox(reportYearHBox, tranFileHBox, reportGen);
                 BorderPane fullWindow = new BorderPane();
                 fullWindow.setCenter(yearlyReportVBox);
+
+                EventHandler<MouseEvent> fileSelect = new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent mouseEvent) {
+                        FileChooser select = new FileChooser();
+                        select.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text files", "*.txt"));
+                        tranFilePath.setText(select.showSaveDialog(reportStage).getAbsolutePath());
+                    }
+                };
+                tranFileBrowse.addEventHandler(MouseEvent.MOUSE_CLICKED, fileSelect);
 
                 EventHandler<MouseEvent> generateYearly = new EventHandler<MouseEvent>() {
                     @Override
                     public void handle(MouseEvent mouseEvent) {
-                        FileChooser transactionFile = new FileChooser(), reportFile = new FileChooser();
-                        transactionFile.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text Files", "*.txt"));
+                        FileChooser reportFile = new FileChooser();
                         reportFile.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text Files", "*.txt"));
-                        try(BufferedReader br = new BufferedReader(new FileReader(transactionFile.showOpenDialog(reportStage)));
+                        try(BufferedReader br = new BufferedReader(new FileReader(new File(tranFilePath.getText())));
                             BufferedWriter bw = new BufferedWriter(new FileWriter(reportFile.showSaveDialog(reportStage)))) {
                             String line;
                             double total = 0.0, totalCash = 0.0, totalCheque = 0.0, totalCard = 0.0;
