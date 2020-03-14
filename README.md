@@ -1,6 +1,9 @@
 # cash-tracker
 Simple JavaFX application which manages monetary transactions
 
+# How to start
+Simply copy the source code, save it as a .java file, compile it and run.
+
 # How to use
 - Creating transaction files
   - Start the application and fill out the fields given.
