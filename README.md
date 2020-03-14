@@ -24,3 +24,6 @@ Simple JavaFX application which manages monetary transactions
 - 247
 - 318
 - 320
+
+# Requirements
+- Java 8
