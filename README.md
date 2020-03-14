@@ -4,12 +4,14 @@ Simple JavaFX application which manages monetary transactions
 # How to use
 - Creating transaction files
   - Start the application and fill out the fields given.
-  - Submit using the submit button, and save into a text file.
+  - Select file to store transaction in.
+  - Submit using the submit button.
   - Further entries can be made after clearing the form using the Clear button; can be saved in the same/different file as required.
 - Generating report files
   - Choose option to generate reports.
+  - Select transaction file for which report is to be generated.
   - Provide necessary details and hit Generate.
-  - Choose transaction file for which report is to be generated.
+  - Save report in a report file of your choice.
 
 # Notes
 - Currencies are not tracked yet, to be added in the future.
