@@ -41,6 +41,9 @@ public class CashTrackerApp extends Application {
         DatePicker transactionDate = new DatePicker();
         RadioButton credit = new RadioButton("Credit");
         RadioButton debit = new RadioButton("Debit");
+        ToggleGroup type = new ToggleGroup();
+        credit.setToggleGroup(type);
+        debit.setToggleGroup(type);
         TextField amount = new TextField();
         ChoiceBox<String> transactionMode = new ChoiceBox<String>();
         TextField description = new TextField();
