@@ -234,7 +234,7 @@ public class CashTrackerApp extends Application {
                 };
                 reportGen.addEventHandler(MouseEvent.MOUSE_CLICKED, generateDaily);
 
-                Scene dailyReport = new Scene(fullWindow, 250, 100);
+                Scene dailyReport = new Scene(fullWindow, 400, 150);
                 reportStage.setScene(dailyReport);
                 reportStage.show();
             }
@@ -325,7 +325,7 @@ public class CashTrackerApp extends Application {
                 };
                 reportGen.addEventHandler(MouseEvent.MOUSE_CLICKED, generateMonthly);
 
-                Scene monthlyReport = new Scene(fullWindow, 300, 150);
+                Scene monthlyReport = new Scene(fullWindow, 400, 200);
                 reportStage.setScene(monthlyReport);
                 reportStage.show();
             }
@@ -412,7 +412,7 @@ public class CashTrackerApp extends Application {
                 };
                 reportGen.addEventHandler(MouseEvent.MOUSE_CLICKED, generateYearly);
 
-                Scene yearlyReport = new Scene(fullWindow, 250, 100);
+                Scene yearlyReport = new Scene(fullWindow, 400, 150);
                 reportStage.setScene(yearlyReport);
                 reportStage.show();
             }
@@ -421,7 +421,7 @@ public class CashTrackerApp extends Application {
 
 
         /* Stage and scene set up */
-        Scene scene = new Scene(complete, 300, 400);
+        Scene scene = new Scene(complete, 400, 450);
         stage.setScene(scene);
         stage.show();
     }
