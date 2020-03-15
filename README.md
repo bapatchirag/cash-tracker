@@ -3,6 +3,14 @@ Simple JavaFX application which manages monetary transactions
 
 # How to start
 Run the executable .jar file.
+- By double clicking it
+
+(or)
+- Execute
+```
+java -jar cashTrack.jar
+```
+from the command line/terminal
 
 # How to use
 - Creating transaction files
