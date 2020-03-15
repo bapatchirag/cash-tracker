@@ -2,7 +2,7 @@
 Simple JavaFX application which manages monetary transactions
 
 # How to start
-Simply copy the source code, save it as a .java file, compile it and run.
+Run the executable .jar file.
 
 # How to use
 - Creating transaction files
